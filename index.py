@@ -1,3 +1,7 @@
+import time
+
+
+
 def print_board(b):
 	s=""
 	for r in b:
@@ -7,159 +11,124 @@ def print_board(b):
 			else:
 				s+=str(c)+" "
 		s=s[:len(s)-1]+"\n"
-	print(s)
+	print(s,end="")
 
 
 
-def solve(_b):
-	def list_and(a,b):
-		c=[]
-		for e in a:
-			if (e in b):
-				c.append(e)
-		for e in b:
-			if (e in a and e not in c):
-				c.append(e)
-		return c
-	def list_equals(a,b):
-		for e in a:
-			if (e not in b):
-				return False
-		for e in b:
-			if (e not in a):
-				return False
-		return True
-	def list_copy(a):
-		b=[]
-		for e in a:
-			b.append(e)
-		return b
-	b=[]
-	for y in range(len(_b)):
-		l=[]
-		for x in range(len(_b[0])):
-			l.append(_b[y][x])
-		b.append(l)
-	while True:
-		moved=False
-		for y in range(len(b)):
-			for x in range(len(b[0])):
-				if (b[y][x]==0 or type(b[y][x])==list):
-					b[y][x]=[i for i in range(1,10)]
-		for y in range(len(b)):
-			l=[i for i in range(1,10)]
-			for x in range(0,len(b[0])):
-				if (type(b[y][x])!=list):
-					l.remove(b[y][x])
-			for x in range(0,len(b[0])):
-				if (type(b[y][x])==list):
-					b[y][x]=list_and(b[y][x],l)
-		for x in range(len(b[0])):
-			l=[i for i in range(1,10)]
-			for y in range(0,len(b)):
-				if (type(b[y][x])!=list):
-					l.remove(b[y][x])
-			for y in range(0,len(b)):
-				if (type(b[y][x])==list):
-					b[y][x]=list_and(b[y][x],l)
-		for i in range(3):
-			for j in range(3):
-				l=[i for i in range(1,10)]
-				for x in range(i*3,i*3+3):
-					for y in range(j*3,j*3+3):
-						if (type(b[y][x])!=list):
-							l.remove(b[y][x])
-				for x in range(i*3,i*3+3):
-					for y in range(j*3,j*3+3):
-						if (type(b[y][x])==list):
-							b[y][x]=list_and(b[y][x],l)
-		ml,mp=10,[-1,-1]
-		for y in range(len(b)):
-			for x in range(len(b[0])):
-				if (type(b[y][x])==list and len(b[y][x])<ml):
-					ml=len(b[y][x])
-					if (ml==0):
-						return (b,False,-1)
-					if (ml==1):
-						b[y][x]=b[y][x][0]
-						moved=True
-						break
-					else:
-						mp=[x,y]
-		if (moved==False and ml<10):
-			x,y=tuple(mp)
-			l=list_copy(b[y][x])
-			for v in l:
-				b[y][x]=v
-				_,s,p=solve(b)
-				if (p==100):
-					return (b,True,100)
-				if (s==True):
-					moved=True
-					break
-			if (moved==False):
-				return (b,False,-1)
-		end=True
-		d=0
-		for y in range(len(b)):
-			for x in range(len(b[0])):
-				if (type(b[y][x])==list):
-					end=False
-				else:
-					d+=1
-		p=int(d/81*100)
-		if (end==True):
-			for y in range(len(b)):
-				l=[i for i in range(1,10)]
-				for x in range(0,len(b[0])):
-					if (type(b[y][x])!=list):
-						if (b[y][x] not in l):
-							end=False
-							break
-						l.remove(b[y][x])
-				if (len(l)>0 or end==False):
-					end=False
-					break
-			if (end==False):
-				continue
-			for x in range(len(b[0])):
-				l=[i for i in range(1,10)]
-				for y in range(0,len(b)):
-					if (type(b[y][x])!=list):
-						if (b[y][x] not in l):
-							end=False
-							break
-						l.remove(b[y][x])
-				if (len(l)>0 or end==False):
-					end=False
-					break
-			if (end==False):
-				continue
-			for i in range(3):
-				for j in range(3):
-					l=[i for i in range(1,10)]
-					for x in range(i*3,i*3+3):
-						for y in range(j*3,j*3+3):
-							if (type(b[y][x])!=list):
-								if (b[y][x] not in l):
-									end=False
-									break
-								l.remove(b[y][x])
-						if (end==False):
-							break
-					if (len(l)>0 or end==False):
-						end=False
-						break
-				if (end==False):
-					break
-		print(str(p)+"%")
-		if (moved==False or end==True):
-			return (b,end,p)
+def solve(b):
+	dt=({1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9})
+	sl=set()
+	for i,k in enumerate(b):
+		for j,e in enumerate(k):
+			if (e!=0):
+				dt[i].remove(e)
+				dt[j+9].remove(e)
+				dt[i//3*3+(j//3)+18].remove(e)
+			else:
+				sl.add(i*9+j)
+	def _solve(b,dt,sl):
+		while (True):
+			msl=10
+			ms=None
+			mv=False
+			for i,k in enumerate(b):
+				for j,e in enumerate(k):
+					if (e==0):
+						s=dt[i]&dt[j+9]&dt[i//3*3+(j//3)+18]
+						if (len(s)==0):
+							return (None,False)
+						elif (len(s)==1):
+							b[i][j]=s.pop()
+							dt[i].remove(b[i][j])
+							dt[j+9].remove(b[i][j])
+							dt[i//3*3+(j//3)+18].remove(b[i][j])
+							sl.remove(i*9+j)
+							mv=True
+						elif (len(s)<msl):
+							msl=len(s)
+							ms=(i,j,s)
+			if (mv==False):
+				if (len(sl)!=0):
+					for e in ms[2]:
+						nb=[m.copy() for m in b]
+						ndt=[m.copy() for m in dt]
+						nsl=sl.copy()
+						nb[ms[0]][ms[1]]=e
+						ndt[ms[0]].remove(e)
+						ndt[ms[1]+9].remove(e)
+						ndt[ms[0]//3*3+(ms[1]//3)+18].remove(e)
+						nsl.remove(ms[0]*9+ms[1])
+						nb,nbs=_solve(nb,ndt,nsl)
+						if (nbs==True):
+							return (nb,True)
+					return (None,False)
+				return (b,len(sl)==0)
+	return _solve(b,dt,sl)[0]
+
+
+
+def solve2(b):
+	r=[{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9}]
+	c=[{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9}]
+	sq=[{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9}]
+	sl=set()
+	for i,k in enumerate(b):
+		for j,e in enumerate(k):
+			if (e!=0):
+				r[i].remove(e)
+				c[j].remove(e)
+				sq[i//3*3+(j//3)].remove(e)
+			else:
+				sl.add(i*9+j)
+	def _solve(b,r,c,sq,sl):
+		while (True):
+			msl=10
+			ms=None
+			mv=False
+			for i,k in enumerate(b):
+				for j,e in enumerate(k):
+					if (e==0):
+						s=r[i]&c[j]&sq[i//3*3+(j//3)]
+						if (len(s)==0):
+							return (None,False)
+						elif (len(s)==1):
+							b[i][j]=s.pop()
+							r[i].remove(b[i][j])
+							c[j].remove(b[i][j])
+							sq[i//3*3+(j//3)].remove(b[i][j])
+							sl.remove(i*9+j)
+							mv=True
+						elif (len(s)<msl):
+							msl=len(s)
+							ms=(i,j,s)
+			if (mv==False):
+				if (len(sl)!=0):
+					for e in ms[2]:
+						nb=[m.copy() for m in b]
+						nr=[m.copy() for m in r]
+						nc=[m.copy() for m in c]
+						nsq=[m.copy() for m in sq]
+						nsl=sl.copy()
+						nb[ms[0]][ms[1]]=e
+						nr[ms[0]].remove(e)
+						nc[ms[1]].remove(e)
+						nsq[ms[0]//3*3+(ms[1]//3)].remove(e)
+						nsl.remove(ms[0]*9+ms[1])
+						nb,nbs=_solve(nb,nr,nc,nsq,nsl)
+						if (nbs==True):
+							return (nb,True)
+					return (None,False)
+				return (b,len(sl)==0)
+	return _solve(b,r,c,sq,sl)[0]
 
 
 
 b=[[5,1,7,6,0,0,0,3,4],[2,8,9,0,0,4,0,0,0],[3,4,6,2,0,5,0,9,0],[6,0,2,0,0,0,0,1,0],[0,3,8,0,0,6,0,4,7],[0,0,0,0,0,0,0,0,0],[0,9,0,0,0,0,0,7,8],[7,0,3,4,0,0,5,6,0],[0,0,0,0,0,0,0,0,0]]
-# b=[[0,0,0,0,0,0,0,1,2],[0,0,0,0,3,5,0,0,0],[0,0,0,6,0,0,0,7,0],[7,0,0,0,0,0,3,0,0],[0,0,0,4,0,0,8,0,0],[1,0,0,0,0,0,0,0,0],[0,0,0,1,2,0,0,0,0],[0,8,0,0,0,0,0,4,0],[0,5,0,0,0,0,6,0,0]]
+b=[[0,0,0,0,0,0,0,1,2],[0,0,0,0,3,5,0,0,0],[0,0,0,6,0,0,0,7,0],[7,0,0,0,0,0,3,0,0],[0,0,0,4,0,0,8,0,0],[1,0,0,0,0,0,0,0,0],[0,0,0,1,2,0,0,0,0],[0,8,0,0,0,0,0,4,0],[0,5,0,0,0,0,6,0,0]]
+# b=[[8,0,0,0,0,0,0,0,0],[0,0,3,6,0,0,0,0,0],[0,7,0,0,9,0,2,0,0],[0,5,0,0,0,7,0,0,0],[0,0,0,0,4,5,7,0,0],[0,0,0,1,0,0,0,3,0],[0,0,1,0,0,0,0,6,8],[0,0,8,5,0,0,0,1,0],[0,9,0,0,0,0,4,0,0]]
+# b=[[6,0,3,1,0,0,2,0,0],[0,0,0,0,4,0,0,0,7],[0,2,0,0,0,8,9,0,0],[0,0,0,0,5,0,0,0,0],[0,0,0,0,0,0,0,4,0],[2,5,0,0,0,0,0,0,1],[0,0,0,6,0,0,0,0,0],[5,9,8,0,3,0,0,0,2],[0,0,4,2,0,0,0,3,0]]
 print_board(b)
-b,_,_=solve(b)
+s=time.time()
+b=solve(b)
+print(f"{round((time.time()-s)*1000)/1000}s")
 print_board(b)
